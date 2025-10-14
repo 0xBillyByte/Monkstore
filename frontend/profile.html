@@ -1,0 +1,99 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Monkey Marketplace</title>
+    <meta name="description" content="Manage your Monkey NFT collection and orders">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="nav__logo">
+                <span class="nav__logo-emoji">🐒</span>
+                <span class="nav__logo-text">Monkey Marketplace</span>
+            </a>
+            <ul class="nav__links">
+                <li><a href="shop.html" class="nav__link">Shop</a></li>
+                <li><a href="cart.html" class="nav__link">
+                    Cart <span class="nav__cart-badge" id="cartBadge">0</span>
+                </a></li>
+                <li><a href="profile.html" class="nav__link nav__link--active">Profile</a></li>
+                <li><a href="login.html" class="nav__link login-link">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="profile">
+                <div class="profile__header">
+                    <div class="profile__avatar">
+                        <div class="profile__avatar-placeholder">👤</div>
+                    </div>
+                    <div class="profile__info">
+                        <h1 class="profile__name">Collector</h1>
+                        <p class="profile__email">collector@example.com</p>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <div class="tabs__nav">
+                        <button class="tabs__button tabs__button--active" data-tab="owned">
+                            Owned NFTs
+                        </button>
+                        <button class="tabs__button" data-tab="orders">
+                            Order History
+                        </button>
+                    </div>
+
+                    <div class="tabs__content">
+                        <div class="tabs__panel tabs__panel--active" id="ownedTab">
+                            <div class="nft-grid" id="ownedNFTGrid">
+                                <div class="empty-state">
+                                    <p>No NFTs owned yet</p>
+                                    <a href="shop.html" class="btn btn--primary">Start Collecting</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tabs__panel" id="ordersTab">
+                            <div class="orders-table" id="ordersTable">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Date</th>
+                                            <th>Total</th>
+                                            <th>Transaction Hash</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ordersTableBody">
+                                        <tr>
+                                            <td>ORD-001</td>
+                                            <td>2024-01-15</td>
+                                            <td>$2,500</td>
+                                            <td>0x1a2b3c4d...</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ORD-002</td>
+                                            <td>2024-01-20</td>
+                                            <td>$1,800</td>
+                                            <td>0x5e6f7g8h...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/profile.js"></script>
+    <script type="module" src="js/auth-ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+Dockerfile
+Dockerfile.*        # falls du Varianten hast
+.dockerignore       # braucht man im Image nicht
+
+.git
+.gitmodules
+.gitignore
+.vscode
+.idea
+
+node_modules
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+README*
+LICENSE*
+*.md
+*.env*
+tailwind.config.*   # wird im statischen Setup nicht benötigt
+vite.config.*       # dito
+tsconfig.*          # dito
+
+todo.txt
