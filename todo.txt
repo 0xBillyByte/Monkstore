@@ -1,0 +1,6 @@
+Overall:
+- Login/registrieren
+- Email versenden (beim kauf)
+- admin center (alle käufe anzeigen)
+- mehr affen
+- Währung einbauen

@@ -1,0 +1,74 @@
+services:
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    ports:
+      - "8080:80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      frontend:
+        condition: service_started
+      backend:
+        condition: service_started
+    networks: [webnet]
+
+  frontend:
+    build: ./frontend
+    expose:
+      - "80"
+    networks: [webnet]
+    depends_on: [backend]
+    scale: 3
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    env_file: .env
+    networks: [webnet]
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  db:
+    build: ./postgresql
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: NYadmin!
+      POSTGRES_DB: monkeymint
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d monkeymint"]
+      interval: 5s
+      retries: 5
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./postgresql/db.sql:/db.sql:ro
+      - ./postgresql/data.sql:/data.sql:ro
+    ports:
+      - "5432:5432"
+    networks: [webnet]
+
+networks:
+  webnet:
+
+volumes:
+  db_data:
