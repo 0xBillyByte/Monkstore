@@ -12,6 +12,7 @@ TODO.txt
 # Docker
 docker-compose.override.yml
 .dockerignore
+docker-compose.yml
 
 # Database files and data
 postgresql/

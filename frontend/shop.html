@@ -1,0 +1,90 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Monkey Marketplace</title>
+    <meta name="description" content="Browse and purchase unique Monkey NFTs">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/nft-modal.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="nav__logo">
+                <span class="nav__logo-emoji">🐒</span>
+                <span class="nav__logo-text">Monkey Marketplace</span>
+            </a>
+            <ul class="nav__links">
+                <li><a href="shop.html" class="nav__link nav__link--active">Shop</a></li>
+                <li><a href="cart.html" class="nav__link">
+                    Cart <span class="nav__cart-badge" id="cartBadge">0</span>
+                </a></li>
+                <li><a href="profile.html" class="nav__link">Profile</a></li>
+                <li><a href="login.html" class="nav__link login-link">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="shop">
+            <aside class="shop__sidebar">
+                <div class="filters">
+                    <h2 class="filters__title">Filters</h2>
+                    
+                    <div class="filter-group">
+                        <label for="searchInput" class="filter-group__label">Search</label>
+                        <input type="text" id="searchInput" class="filter-input" placeholder="Search monkeys...">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="rarityFilter" class="filter-group__label">Rarity</label>
+                        <select id="rarityFilter" class="filter-select">
+                            <option value="">All Rarities</option>
+                            <option value="Common">Common</option>
+                            <option value="Rare">Rare</option>
+                            <option value="Epic">Epic</option>
+                            <option value="Legendary">Legendary</option>
+                            <option value="Mythic">Mythic</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="priceRange" class="filter-group__label">
+                            Price Range: $<span id="priceValue">0-10000</span>
+                        </label>
+                        <input type="range" id="priceRange" class="filter-slider" 
+                               min="0" max="10000" step="100" value="10000">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="sortBy" class="filter-group__label">Sort By</label>
+                        <select id="sortBy" class="filter-select">
+                            <option value="rarity-desc">Rarity ↓</option>
+                            <option value="rarity-asc">Rarity ↑</option>
+                            <option value="price-asc">Price ↑</option>
+                            <option value="price-desc">Price ↓</option>
+                        </select>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="shop__content">
+                <div class="shop__header">
+                    <h1 class="shop__title">Monkey Collection</h1>
+                    <p class="shop__count" id="nftCount">Loading...</p>
+                </div>
+                
+                <div class="nft-grid" id="nftGrid">
+                    <div class="loading">Loading NFTs...</div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <script Type="module" src="js/main.js"></script>
+    <script Type="module" src="js/api.js"></script>
+    <script src="js/nft-modal.js"></script>
+    <script type="module" src="js/auth-ui.js"></script>
+</body>
+</html>

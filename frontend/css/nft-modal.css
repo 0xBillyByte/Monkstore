@@ -1,0 +1,301 @@
+/* Monkey NFT Modal Styles */
+
+.monkey-modal-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+}
+
+.monkey-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+}
+
+.monkey-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  background-color: var(--color-bg-secondary, #1a1a1f);
+  border-radius: var(--border-radius-lg, 16px);
+  border: 1px solid var(--color-border, #2a2a2f);
+  overflow: hidden;
+  opacity: 0;
+  transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Open state animations */
+.monkey-modal-container.monkey-modal-open .monkey-modal-overlay {
+  opacity: 1;
+}
+
+.monkey-modal-container.monkey-modal-open .monkey-modal {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Modal Header */
+.monkey-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--color-border, #2a2a2f);
+}
+
+.monkey-modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #e5e5e7);
+  margin: 0;
+}
+
+.monkey-modal-close {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary, #94949c);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--border-radius, 8px);
+  transition: all 150ms ease;
+}
+
+.monkey-modal-close:hover {
+  background-color: var(--color-bg-tertiary, #25252b);
+  color: var(--color-text-primary, #e5e5e7);
+}
+
+/* Modal Body */
+.monkey-modal-body {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 2rem;
+  padding: 2rem;
+  max-height: calc(90vh - 80px);
+  overflow-y: auto;
+}
+
+/* Image Section */
+.monkey-modal-image-section {
+  position: relative;
+}
+
+.monkey-modal-image {
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius, 8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.monkey-modal-rarity {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius, 8px);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Rarity Colors */
+.monkey-modal-rarity.rarity-common {
+  color: var(--color-rarity-common, #7e7e85);
+  border: 1px solid var(--color-rarity-common, #7e7e85);
+}
+
+.monkey-modal-rarity.rarity-rare {
+  color: var(--color-rarity-rare, #4991ff);
+  border: 1px solid var(--color-rarity-rare, #4991ff);
+}
+
+.monkey-modal-rarity.rarity-epic {
+  color: var(--color-rarity-epic, #b26dff);
+  border: 1px solid var(--color-rarity-epic, #b26dff);
+}
+
+.monkey-modal-rarity.rarity-legendary {
+  color: var(--color-rarity-legendary, #ffc247);
+  border: 1px solid var(--color-rarity-legendary, #ffc247);
+}
+
+.monkey-modal-rarity.rarity-mythic {
+  color: var(--color-rarity-mythic, #ff6bdc);
+  border: 1px solid var(--color-rarity-mythic, #ff6bdc);
+}
+
+/* Info Section */
+.monkey-modal-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.monkey-modal-details h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #e5e5e7);
+  margin: 0 0 0.75rem 0;
+}
+
+.monkey-modal-description {
+  color: var(--color-text-secondary, #94949c);
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+}
+
+.monkey-modal-price-info {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: var(--color-bg-tertiary, #25252b);
+  border-radius: var(--border-radius, 8px);
+}
+
+.monkey-modal-price-label {
+  color: var(--color-text-secondary, #94949c);
+}
+
+.monkey-modal-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary, #ff7d1a);
+}
+
+/* Traits Section - Match shop card style */
+.monkey-modal-traits {
+  margin-top: 1rem;
+}
+
+.monkey-modal-traits-title {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #94949c);
+  margin-bottom: 0.5rem;
+}
+
+.monkey-modal-traits-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.monkey-modal-traits-list .trait {
+  padding: 0.25rem 0.75rem;
+  background-color: var(--color-bg-tertiary, #25252b);
+  border-radius: var(--border-radius-sm, 4px);
+  font-size: 0.875rem;
+  color: var(--color-text-primary, #e5e5e7);
+}
+
+/* Action Buttons */
+.monkey-modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.monkey-modal-buy-btn,
+.monkey-modal-favorite-btn,
+.monkey-modal-share-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--border-radius, 8px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.monkey-modal-buy-btn {
+  background-color: var(--color-primary, #ff7d1a);
+  color: white;
+  flex: 1;
+  justify-content: center;
+}
+
+.monkey-modal-buy-btn:hover {
+  background-color: var(--color-primary-hover, #e66d0a);
+  transform: translateY(-1px);
+}
+
+.monkey-modal-favorite-btn,
+.monkey-modal-share-btn {
+  background-color: var(--color-bg-tertiary, #25252b);
+  color: var(--color-text-primary, #e5e5e7);
+}
+
+.monkey-modal-favorite-btn:hover,
+.monkey-modal-share-btn:hover {
+  background-color: var(--color-bg-hover, #2f2f35);
+}
+
+.monkey-modal-favorite-btn.favorited {
+  color: #ff4757;
+}
+
+.monkey-modal-favorite-btn.favorited svg {
+  fill: #ff4757;
+}
+
+/* Scrollbar styling for modal body */
+.monkey-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.monkey-modal-body::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary, #1a1a1f);
+}
+
+.monkey-modal-body::-webkit-scrollbar-thumb {
+  background: var(--color-border, #2a2a2f);
+  border-radius: 4px;
+}
+
+.monkey-modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary, #5a5a65);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .monkey-modal {
+    width: 95%;
+    max-width: none;
+  }
+  
+  .monkey-modal-body {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+  
+  .monkey-modal-traits-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .monkey-modal-actions {
+    flex-direction: column;
+  }
+  
+  .monkey-modal-favorite-btn,
+  .monkey-modal-share-btn {
+    justify-content: center;
+  }
+}
