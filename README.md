@@ -143,7 +143,7 @@ Response: 204 No Content
 ```
 Remove NFT from shopping cart.
 
-## 🚀 Setup & Installation
+## Setup & Installation
 
 ### Prerequisites
 - Docker and Docker Compose installed
@@ -199,7 +199,7 @@ python3 -m http.server 8080
 npx serve .
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Monkstore/
@@ -229,7 +229,7 @@ Monkstore/
 └── README.md
 ```
 
-## 🎯 Usage
+## Usage
 
 1. **Access the Application**: Navigate to `http://localhost` (or your configured domain)
 2. **Create an Account**: Click "Login" and then "Register" to create a new account
@@ -239,7 +239,7 @@ Monkstore/
 6. **View Cart**: Check your cart to see selected items and total price
 7. **Profile**: Visit your profile page to view account information
 
-## 🔒 Security Notes
+## Security Notes
 
 - Never commit the `.env` file or expose sensitive credentials
 - Use strong, unique values for `JWT_SECRET` in production
