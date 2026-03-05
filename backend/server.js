@@ -177,7 +177,7 @@ function maskDbUrl(raw) {
 // ENV
 // ------------------------------------------------------------
 const PORT           = process.env.PORT || 3000;
-const DATABASE_URL   = process.env.DATABASE_URL;
+const DATABASE_URL   = process.env.DATABASE_URL || process.env.database_url;
 const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN || '*';
 const JWT_SECRET     = process.env.JWT_SECRET || 'defaultsecret';
 
@@ -370,7 +370,8 @@ const server = http.createServer(async (req, res) => {
     //------------------------------------------------------------------
     // GET /api/config – returns non-sensitive runtime configuration
     //------------------------------------------------------------------
-    if (req.method === 'GET' && pathname === '/api/config') {
+    if (req.method === 'GET' && (pathname === '/api/config' || pathname === '/api/config/')) {
+      serverLog('info', 'config', 'Config endpoint called.', `DATABASE_URL present: ${!!DATABASE_URL}`);
       return respond(res, 200, { dbUrl: maskDbUrl(DATABASE_URL) });
     }
 
