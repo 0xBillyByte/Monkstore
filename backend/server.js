@@ -154,6 +154,24 @@ function mapDbError(e) {
 }
 
 // ------------------------------------------------------------
+// Helpers
+// ------------------------------------------------------------
+/**
+ * Returns a copy of a database URL with the password replaced by '***',
+ * so it can be safely included in log output.
+ */
+function maskDbUrl(raw) {
+  if (!raw) return '(not set)';
+  try {
+    const parsed = new url.URL(raw);
+    if (parsed.password) parsed.password = '***';
+    return parsed.toString();
+  } catch {
+    return '(invalid URL)';
+  }
+}
+
+// ------------------------------------------------------------
 // ENV
 // ------------------------------------------------------------
 const PORT           = process.env.PORT || 3000;
@@ -685,4 +703,4 @@ process.on('unhandledRejection', (reason) => {
 
 // ------------------------------------------------------------
 server.listen(PORT, () =>
-  serverLog('info', 'startup', `Backend running on port ${PORT}.`));
+  serverLog('info', 'startup', `Backend running on port ${PORT}.`, `DATABASE_URL: ${maskDbUrl(DATABASE_URL)}`));
