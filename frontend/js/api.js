@@ -265,3 +265,25 @@ export const logout = () => {
   window.location.href = '/login.html';
 };
 
+// ------------------------------------------------------------------ Config
+
+/**
+ * Fetch runtime config from the backend and log the masked DATABASE_URL
+ * to the System Logs panel so it is easy to confirm the .env is loaded.
+ */
+export async function fetchConfig() {
+  try {
+    const res = await fetch('/api/config');
+    if (res.ok) {
+      const { dbUrl } = await res.json();
+      logger.info(`DATABASE_URL: ${dbUrl}`, 'config');
+    } else {
+      logger.warn(`Could not load config (HTTP ${res.status}).`, 'config');
+    }
+  } catch (err) {
+    logger.warn(`Config fetch failed: ${err.message}`, 'config');
+  }
+}
+
+fetchConfig();
+

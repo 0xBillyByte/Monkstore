@@ -2,6 +2,8 @@
 
 'use strict';
 
+require('dotenv').config();
+
 const http   = require('http');
 const url    = require('url');
 const crypto = require('crypto');
@@ -232,14 +234,6 @@ pool.on('error', (err) => {
   serverLog('error', 'db-pool', 'Unexpected idle-client database error.', err.message);
 });
 
-pool.on('connect', () => {
-  serverLog('info', 'db-pool', 'New client connected to the database pool.');
-});
-
-pool.on('remove', () => {
-  serverLog('info', 'db-pool', 'A client was removed from the database pool.');
-});
-
 // ------------------------------------------------------------
 // Helpers
 // ------------------------------------------------------------
@@ -371,6 +365,13 @@ const server = http.createServer(async (req, res) => {
         serverLog('error', 'health', 'Health check: database is unreachable.', e.message);
         return respond(res, 503, { status: 'unhealthy', db: 'unreachable', detail: e.message });
       }
+    }
+
+    //------------------------------------------------------------------
+    // GET /api/config – returns non-sensitive runtime configuration
+    //------------------------------------------------------------------
+    if (req.method === 'GET' && pathname === '/api/config') {
+      return respond(res, 200, { dbUrl: maskDbUrl(DATABASE_URL) });
     }
 
     //------------------------------------------------------------------
