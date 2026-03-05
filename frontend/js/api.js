@@ -287,3 +287,6 @@ export async function fetchConfig() {
 
 fetchConfig();
 
+// Add a "Check Config" button to the log panel so DATABASE_URL can be checked on demand.
+logger.addButton('Check Config', fetchConfig);
+

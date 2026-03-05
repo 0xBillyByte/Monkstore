@@ -15,10 +15,11 @@ const LEVEL_CONFIG = {
 
 class Logger {
   constructor() {
-    this._entries = [];
-    this._panel   = null;
-    this._list    = null;
-    this._open    = true;
+    this._entries        = [];
+    this._panel          = null;
+    this._list           = null;
+    this._open           = true;
+    this._pendingButtons = [];
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this._createPanel());
@@ -51,6 +52,10 @@ class Logger {
 
     panel.querySelector('.log-panel__clear').addEventListener('click', () => this.clear());
     panel.querySelector('.log-panel__toggle').addEventListener('click', () => this._togglePanel());
+
+    // Insert any buttons that were queued before the panel existed
+    this._pendingButtons.forEach(({ label, handler }) => this._insertButton(label, handler));
+    this._pendingButtons = [];
 
     // Replay any entries that arrived before the DOM was ready
     this._entries.forEach(e => this._renderEntry(e));
@@ -115,6 +120,33 @@ class Logger {
     }
 
     this._renderEntry(entry);
+  }
+
+  // ------------------------------------------------------------------ dynamic buttons
+
+  /**
+   * Add a button to the log-panel header controls bar.
+   * Safe to call before the panel is created – the button will be queued.
+   * @param {string}   label   Button text and title.
+   * @param {Function} handler Click handler.
+   */
+  addButton(label, handler) {
+    if (this._panel) {
+      this._insertButton(label, handler);
+    } else {
+      this._pendingButtons.push({ label, handler });
+    }
+  }
+
+  _insertButton(label, handler) {
+    const controls  = this._panel.querySelector('.log-panel__controls');
+    const toggleBtn = this._panel.querySelector('.log-panel__toggle');
+    const btn = document.createElement('button');
+    btn.className = 'log-panel__btn';
+    btn.title     = label;
+    btn.textContent = label;
+    btn.addEventListener('click', handler);
+    controls.insertBefore(btn, toggleBtn);
   }
 
   // ------------------------------------------------------------------ public API
