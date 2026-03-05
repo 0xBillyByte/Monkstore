@@ -1,5 +1,6 @@
 // auth-ui.js - Handle authentication UI updates and login/register functionality
-import { isAuthenticated, getCurrentUser, logout, api } from './api.js';
+import { isAuthenticated, getCurrentUser, logout, api, apiFetch } from './api.js';
+import logger from './logger.js';
 
 // Update authentication UI across all pages
 export function updateAuthUI() {
@@ -86,34 +87,48 @@ function initAuthForms() {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const username = document.getElementById('loginUsername').value;
+            const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
-            const errorEl = document.getElementById('loginError');
+            const errorEl  = document.getElementById('loginError');
+
+            if (!username || !password) {
+                const msg = 'Username and password are required.';
+                errorEl.textContent = msg;
+                errorEl.style.display = 'block';
+                logger.warn(msg, 'login');
+                return;
+            }
             
             try {
-                const response = await fetch(`${api.baseUrl}/api/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, password })
-                });
+                const response = await apiFetch('/login', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ username, password }),
+                }, 'login');
                 
                 const data = await response.json();
                 
                 if (response.ok) {
                     localStorage.setItem('authToken', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
+                    logger.success(`Logged in as "${data.user.username}".`, 'login');
                     window.location.href = 'shop.html';
                 } else {
-                    errorEl.textContent = data.error === 'invalid_credentials' 
-                        ? 'Invalid username or password' 
-                        : 'Login failed. Please try again.';
+                    const msg = data.error === 'invalid_credentials'
+                        ? 'Invalid username or password.'
+                        : (data.error === 'missing_credentials'
+                            ? 'Username and password are required.'
+                            : 'Login failed. Please try again.');
+                    errorEl.textContent = msg;
                     errorEl.style.display = 'block';
                 }
             } catch (error) {
-                errorEl.textContent = 'Network error. Please try again.';
+                const msg = navigator.onLine
+                    ? 'Cannot reach the server. Please check your connection.'
+                    : 'No internet connection. Please check your network.';
+                errorEl.textContent = msg;
                 errorEl.style.display = 'block';
+                logger.error(`Login exception: ${error.message}`, 'login');
             }
         });
     }
@@ -122,20 +137,28 @@ function initAuthForms() {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const username = document.getElementById('registerUsername').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const errorEl = document.getElementById('registerError');
+            const username  = document.getElementById('registerUsername').value.trim();
+            const email     = document.getElementById('registerEmail').value.trim();
+            const password  = document.getElementById('registerPassword').value;
+            const errorEl   = document.getElementById('registerError');
             const successEl = document.getElementById('registerSuccess');
+
+            // Basic client-side validation before hitting the server
+            if (!username || !email || !password) {
+                const msg = 'All fields (username, email, password) are required.';
+                errorEl.textContent = msg;
+                errorEl.style.display = 'block';
+                successEl.style.display = 'none';
+                logger.warn(msg, 'register');
+                return;
+            }
             
             try {
-                const response = await fetch(`${api.baseUrl}/api/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, email, password })
-                });
+                const response = await apiFetch('/register', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ username, email, password }),
+                }, 'register');
                 
                 const data = await response.json();
                 
@@ -143,24 +166,32 @@ function initAuthForms() {
                     localStorage.setItem('authToken', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
                     
-                    successEl.textContent = 'Registration successful! Redirecting...';
+                    successEl.textContent = 'Registration successful! Redirecting…';
                     successEl.style.display = 'block';
                     errorEl.style.display = 'none';
+                    logger.success(`Account created for "${data.user.username}".`, 'register');
                     
                     setTimeout(() => {
                         window.location.href = 'shop.html';
                     }, 1500);
                 } else {
-                    errorEl.textContent = data.error === 'user_exists' 
-                        ? 'Username or email already exists' 
-                        : 'Registration failed. Please try again.';
+                    const msg = data.error === 'user_exists'
+                        ? 'A user with that username or email already exists.'
+                        : (data.error === 'missing_fields'
+                            ? 'All fields are required for registration.'
+                            : 'Registration failed. Please try again.');
+                    errorEl.textContent = msg;
                     errorEl.style.display = 'block';
                     successEl.style.display = 'none';
                 }
             } catch (error) {
-                errorEl.textContent = 'Network error. Please try again.';
+                const msg = navigator.onLine
+                    ? 'Cannot reach the server. Please check your connection.'
+                    : 'No internet connection. Please check your network.';
+                errorEl.textContent = msg;
                 errorEl.style.display = 'block';
                 successEl.style.display = 'none';
+                logger.error(`Registration exception: ${error.message}`, 'register');
             }
         });
     }

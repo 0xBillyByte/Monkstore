@@ -1,6 +1,7 @@
 // Cart functionality for Monkey Marketplace
 
 import { getCart, removeFromCart } from './api.js';
+import logger from './logger.js';
 
 // Initialize cart page
 export async function initializeCart() {
@@ -37,6 +38,7 @@ async function loadCartItems() {
     }
   } catch (error) {
     console.error('Error loading cart:', error);
+    logger.error(`Cart items failed to load: ${error.message}`, 'cart');
     cartContent.innerHTML = `
       <div class="cart__error">
         <p>Error loading cart. Please try again.</p>
@@ -144,6 +146,7 @@ async function handleRemoveItem(e) {
     await loadCartItems();
   } catch (error) {
     console.error('Error removing item:', error);
+    logger.error(`Failed to remove item "${itemId}" from cart: ${error.message}`, 'cart');
     cartItem.classList.remove('cart-item--removing');
     alert('Failed to remove item. Please try again.');
   }
@@ -188,10 +191,12 @@ async function handleIncreaseQuantity(e) {
     } else {
       const error = await response.json();
       console.error('Cart error:', error);
+      logger.error(`Failed to increase quantity for "${itemId}": ${error.error || response.status}`, 'cart');
       throw new Error('Failed to update quantity');
     }
   } catch (error) {
     console.error('Error updating quantity:', error);
+    logger.error(`Quantity update exception for "${itemId}": ${error.message}`, 'cart');
     alert('Failed to update quantity. Please try again.');
   }
 }
@@ -232,6 +237,7 @@ async function handleCheckout() {
     }
   } catch (error) {
     console.error('Error during checkout:', error);
+    logger.error(`Checkout failed: ${error.message}`, 'checkout');
     alert('Checkout failed. Please try again.');
   } finally {
     checkoutBtn.disabled = false;

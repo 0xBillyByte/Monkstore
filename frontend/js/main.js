@@ -1,6 +1,7 @@
 // Main JavaScript file for Monkey Marketplace
 // Handles page initialization and shared functionality
 import { fetchNFTs, getCart, addToCart, removeFromCart } from './api.js';
+import logger from './logger.js';
 
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -48,7 +49,8 @@ async function updateCartBadge() {
       cartBadge.textContent = cart.length;
     }
   } catch (error) {
-    console.error('Error updating cart badge:', error);
+      console.error('Error updating cart badge:', error);
+      logger.warn(`Cart badge could not be updated: ${error.message}`, 'cartBadge');
   }
 }
 
@@ -92,6 +94,7 @@ function initializeShop() {
       }
     } catch (error) {
       console.error('Error loading NFTs:', error);
+      logger.error(`Failed to load NFT catalogue: ${error.message}`, 'shop');
       if (nftGrid) {
         nftGrid.innerHTML = '<div class="loading">Error loading NFTs</div>';
       }
@@ -166,6 +169,7 @@ function initializeShop() {
       await updateCartBadge();
     } catch (error) {
       console.error('Error adding to cart:', error);
+      logger.error(`Add to cart failed for "${nftId}": ${error.message}`, 'addToCart');
       button.textContent = 'Error';
       setTimeout(() => {
         button.textContent = 'Add to Cart';
@@ -222,6 +226,7 @@ function initializeCart() {
       displayCart(cart);
     } catch (error) {
       console.error('Error loading cart:', error);
+      logger.error(`Cart page load failed: ${error.message}`, 'cart');
     }
   }
   
@@ -279,6 +284,7 @@ function initializeCart() {
       updateCartBadge();
     } catch (error) {
       console.error('Error removing from cart:', error);
+      logger.error(`Remove from cart failed for "${nftId}": ${error.message}`, 'cart');
     }
   }
   
@@ -343,6 +349,7 @@ function initializeProfile() {
       ownedNFTGrid.innerHTML = nftsHTML;
     } catch (error) {
       console.error('Error loading owned NFTs:', error);
+      logger.error(`Owned NFTs load failed: ${error.message}`, 'profile');
       ownedNFTGrid.innerHTML = '<div class="empty-state"><p>Error loading NFTs</p></div>';
     }
   }
