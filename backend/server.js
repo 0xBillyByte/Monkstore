@@ -2,7 +2,8 @@
 
 'use strict';
 
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
 
 const http   = require('http');
 const url    = require('url');
@@ -705,4 +706,5 @@ process.on('unhandledRejection', (reason) => {
 
 // ------------------------------------------------------------
 server.listen(PORT, () =>
+
   serverLog('info', 'startup', `Backend running on port ${PORT}.`, `DATABASE_URL: ${maskDbUrl(DATABASE_URL)}`));
