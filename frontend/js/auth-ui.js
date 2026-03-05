@@ -1,5 +1,5 @@
 // auth-ui.js - Handle authentication UI updates and login/register functionality
-import { isAuthenticated, getCurrentUser, logout } from './api.js';
+import { isAuthenticated, getCurrentUser, logout, api } from './api.js';
 
 // Update authentication UI across all pages
 export function updateAuthUI() {

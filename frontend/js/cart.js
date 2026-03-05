@@ -171,9 +171,13 @@ async function handleIncreaseQuantity(e) {
   
   try {
     // Add the same item again (this will increment quantity on backend)
+    const token = localStorage.getItem('authToken');
     const response = await fetch('/api/cart', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+      },
       body: JSON.stringify({ nftId: itemId })
     });
     
