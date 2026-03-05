@@ -162,8 +162,8 @@ function initializeShop() {
     button.textContent = 'Adding...';
     
     try {
-      const { existed } = await addToCart(nftId);
-      if (existed) { /* Already in cart */ } else { /* Added */ }
+      await addToCart(nftId);
+      await updateCartBadge();
     } catch (error) {
       console.error('Error adding to cart:', error);
       button.textContent = 'Error';
@@ -392,11 +392,6 @@ function debounce(func, wait) {
     timeout = setTimeout(later, wait);
   };
 }
-
-// Make modal functions globally accessible
-window.openNFTModal = openNFTModal;
-window.closeNFTModal = closeNFTModal;
-window.handleModalAddToCart = handleModalAddToCart;
 
 window.addEventListener('hashchange', () => {
   const hash = window.location.hash;
