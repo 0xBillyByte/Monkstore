@@ -4,7 +4,7 @@ import { isAuthenticated, getCurrentUser, api } from './api.js';
 // Initialize profile page
 export async function initializeProfile() {
     if (!isAuthenticated()) {
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
         return;
     }
     
