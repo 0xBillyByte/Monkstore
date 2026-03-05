@@ -5,6 +5,8 @@
 const http   = require('http');
 const url    = require('url');
 const crypto = require('crypto');
+const fs     = require('fs');
+const path   = require('path');
 const { Pool } = require('pg');
 
 // ------------------------------------------------------------
@@ -14,6 +16,40 @@ const PORT           = process.env.PORT || 3000;
 const DATABASE_URL   = process.env.DATABASE_URL;
 const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN || '*';
 const JWT_SECRET     = process.env.JWT_SECRET || 'defaultsecret';
+
+// ------------------------------------------------------------
+// Static file serving
+// ------------------------------------------------------------
+const FRONTEND_DIR = path.resolve(__dirname, '..', 'frontend');
+
+const MIME_TYPES = {
+  '.html': 'text/html; charset=utf-8',
+  '.css':  'text/css; charset=utf-8',
+  '.js':   'application/javascript; charset=utf-8',
+  '.json': 'application/json',
+  '.png':  'image/png',
+  '.jpg':  'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.gif':  'image/gif',
+  '.svg':  'image/svg+xml',
+  '.ico':  'image/x-icon',
+  '.woff': 'font/woff',
+  '.woff2':'font/woff2',
+  '.ttf':  'font/ttf',
+};
+
+function serveStatic(res, filePath) {
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      return res.end('Not found');
+    }
+    const ext = path.extname(filePath).toLowerCase();
+    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+    res.writeHead(200, { 'Content-Type': contentType });
+    res.end(data);
+  });
+}
 
 // ------------------------------------------------------------
 // Database connection pool
@@ -325,8 +361,25 @@ const server = http.createServer(async (req, res) => {
       return respond(res, 204, {});
     }
 
-    // 404 fallback
-    respond(res, 404, { error: 'not_found' });
+    // Static file fallback – serve files from the frontend directory
+    let filePath = path.join(FRONTEND_DIR, pathname);
+
+    // Prevent path traversal outside the frontend directory
+    if (!filePath.startsWith(FRONTEND_DIR + path.sep) && filePath !== FRONTEND_DIR) {
+      return respond(res, 403, { error: 'forbidden' });
+    }
+
+    // Default to index.html for directory requests
+    if (pathname === '/' || pathname.endsWith('/')) {
+      filePath = path.join(filePath, 'index.html');
+    }
+
+    // If no extension, try appending .html
+    if (!path.extname(filePath)) {
+      filePath = filePath + '.html';
+    }
+
+    return serveStatic(res, filePath);
 
   } catch (e) {
     console.error('Unhandled error:', e.message);
