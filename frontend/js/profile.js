@@ -1,5 +1,6 @@
 // profile.js - Handle profile page functionality
-import { isAuthenticated, getCurrentUser, api } from './api.js';
+import { isAuthenticated, getCurrentUser, api, apiFetch } from './api.js';
+import logger from './logger.js';
 
 // Initialize profile page
 export async function initializeProfile() {
@@ -15,16 +16,12 @@ export async function initializeProfile() {
 // Load and display user profile
 async function loadUserProfile() {
     try {
-        // Get user data from token
-        const token = localStorage.getItem('authToken');
-        const response = await fetch(`${api.baseUrl}/api/profile`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await apiFetch('/profile', {
+            headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+        }, 'profile');
         
         if (!response.ok) {
-            throw new Error('Failed to load profile');
+            throw new Error(`Failed to load profile: HTTP ${response.status}`);
         }
         
         const data = await response.json();
@@ -37,15 +34,18 @@ async function loadUserProfile() {
         // Update avatar with first letter of username
         const avatarPlaceholder = document.querySelector('.profile__avatar-placeholder');
         avatarPlaceholder.textContent = user.username.charAt(0).toUpperCase();
+        logger.success(`Profile loaded for "${user.username}".`, 'profile');
         
     } catch (error) {
         console.error('Error loading profile:', error);
+        logger.error(`Profile load failed: ${error.message}`, 'profile');
         // Fallback to local storage user data
         const user = getCurrentUser();
         if (user) {
             document.querySelector('.profile__name').textContent = user.username;
             document.querySelector('.profile__email').textContent = user.email;
             document.querySelector('.profile__avatar-placeholder').textContent = user.username.charAt(0).toUpperCase();
+            logger.warn('Displaying cached profile data from localStorage.', 'profile');
         }
     }
 }

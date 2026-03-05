@@ -196,8 +196,16 @@ class NFTModal {
           const currentCount = parseInt(cartBadge.textContent) || 0;
           cartBadge.textContent = currentCount + 1;
         }
+        if (window.AppLogger) window.AppLogger.success(`"${this.currentNFT.name}" added to cart.`, 'nftModal');
       } else {
         btn.textContent = 'Error';
+        if (window.AppLogger) {
+          const errData = result || {};
+          window.AppLogger.error(
+            `Add to cart failed (HTTP ${response.status})${errData.error ? ': ' + errData.error : ''}.`,
+            'nftModal'
+          );
+        }
       }
       
       setTimeout(() => {
@@ -206,6 +214,7 @@ class NFTModal {
       }, 1500);
     } catch (error) {
       console.error('Error adding to cart:', error);
+      if (window.AppLogger) window.AppLogger.error(`Add to cart exception: ${error.message}`, 'nftModal');
       btn.textContent = 'Error';
       setTimeout(() => {
         btn.textContent = originalText;
@@ -280,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
           nftModal.open(nftData);
         } catch (error) {
           console.error('Error loading NFT details:', error);
+          if (window.AppLogger) window.AppLogger.error(`Failed to load NFT details for "${nftId}": ${error.message}`, 'nftModal');
           alert('Failed to load NFT details. Please try again.');
         }
       });
@@ -307,6 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(nft => window.monkeyNFTModal.open(nft))
     .catch(err => {
       console.error('Error loading NFT:', err);
+      if (window.AppLogger) window.AppLogger.error(`Could not open NFT modal for "${id}": ${err.message}`, 'nftModal');
       alert('Could not open NFT modal');
     });
 };
@@ -331,6 +342,7 @@ async function fetchNFTById(id) {
     return nft;
   } catch (error) {
     console.error('Error fetching NFT:', error);
+    if (window.AppLogger) window.AppLogger.error(`fetchNFTById("${id}") failed: ${error.message}`, 'nftModal');
     throw error;
   }
 }
