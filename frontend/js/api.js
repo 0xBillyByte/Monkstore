@@ -31,20 +31,51 @@ const HTTP_ERROR_MESSAGES = {
  * Human-readable messages for the structured `error` codes returned by our backend.
  */
 const API_ERROR_MESSAGES = {
+  // Request / input errors
   invalid_json:           'The request body contained invalid JSON and could not be parsed.',
+  empty_body:             'The request body was empty. Please provide the required data.',
   missing_fields:         'One or more required fields are missing from the request.',
   missing_credentials:    'Both a username and password are required to log in.',
   invalid_credentials:    'Invalid username or password. Please check your credentials.',
-  user_exists:            'A user with that username or email address already exists.',
-  unauthorized:           'Authentication is required. Please log in to continue.',
-  user_not_found:         'The requested user account could not be found in the database.',
-  not_found:              'The requested item or resource was not found.',
-  invalid_id:             'The ID provided is not in the expected format (e.g. monk-001).',
+  invalid_username:       'Username must be at least 2 characters long.',
   missing_nftId:          'An NFT ID must be supplied for this cart operation.',
   invalid_nftId:          'The NFT ID provided is not a valid format.',
-  db_error:               'A database error occurred on the server. Please try again later.',
-  internal_server_error:  'An internal server error occurred. The team has been notified.',
+  invalid_id:             'The ID provided is not in the expected format (e.g. monk-001).',
   forbidden:              'Access to this resource is forbidden.',
+
+  // Auth errors
+  unauthorized:           'Authentication is required. Please log in to continue.',
+
+  // User / resource errors
+  user_exists:            'A user with that username or email address already exists.',
+  user_not_found:         'The requested user account could not be found in the database.',
+  not_found:              'The requested item or resource was not found.',
+
+  // Database constraint errors
+  invalid_reference:      'A referenced record does not exist (foreign key violation).',
+  constraint_violation:   'The provided value violates a database constraint.',
+
+  // Database connectivity / infrastructure errors
+  db_error:               'A database error occurred on the server. Please try again later.',
+  db_connection_refused:  'The database server is refusing connections. Please check if PostgreSQL is running.',
+  db_timeout:             'The database connection timed out. The server may be overloaded.',
+  db_host_not_found:      'The database host could not be resolved. Check your server configuration.',
+  db_connection_failure:  'The database connection was lost unexpectedly. Please try again.',
+  db_no_connection:       'No active database connection is available. Please try again.',
+  db_auth_failed:         'Database authentication failed. The server credentials may be misconfigured.',
+  db_not_found:           'The specified database does not exist on the server.',
+  db_too_many_connections:'The database has reached its maximum connection limit. Please try later.',
+  db_out_of_memory:       'The database server ran out of memory. Please try again later.',
+  db_disk_full:           'The database disk is full. Contact the server administrator.',
+  db_serialization_failure:'A transaction conflict occurred on the server. Please retry.',
+  db_deadlock:            'A database deadlock was detected. Please retry your request.',
+  db_query_cancelled:     'The database query was cancelled (possible timeout). Please try again.',
+  db_syntax_error:        'A SQL syntax error occurred on the server. This is a server-side bug.',
+  db_query_error:         'A database query error occurred on the server.',
+  db_schema_error:        'A database schema error occurred (missing table or column). Run migrations.',
+
+  // Generic server errors
+  internal_server_error:  'An internal server error occurred. The team has been notified.',
 };
 
 // ------------------------------------------------------------------ Auth helpers
@@ -142,7 +173,13 @@ export const api = { baseUrl: '' };
 export async function fetchNFTs(filters = {}) {
   const qs  = new URLSearchParams(filters).toString();
   const res = await apiFetch(`/monkeys?${qs}`, {}, 'fetchNFTs');
-  if (!res.ok) throw new Error(`Failed to fetch NFTs: HTTP ${res.status}`);
+  if (!res.ok) {
+    let detail = '';
+    try { const d = await res.json(); detail = d.error || ''; } catch { /* ignore */ }
+    throw new Error(detail
+      ? `Failed to fetch NFTs: HTTP ${res.status} (${detail})`
+      : `Failed to fetch NFTs: HTTP ${res.status}`);
+  }
   return res.json();
 }
 
@@ -152,7 +189,13 @@ export async function fetchNFTs(filters = {}) {
  */
 export const getCart = async () => {
   const res = await apiFetch('/cart', { headers: getAuthHeaders() }, 'getCart');
-  if (!res.ok) throw new Error(`Failed to fetch cart: HTTP ${res.status}`);
+  if (!res.ok) {
+    let detail = '';
+    try { const d = await res.json(); detail = d.error || ''; } catch { /* ignore */ }
+    throw new Error(detail
+      ? `Failed to fetch cart: HTTP ${res.status} (${detail})`
+      : `Failed to fetch cart: HTTP ${res.status}`);
+  }
   return res.json();
 };
 
