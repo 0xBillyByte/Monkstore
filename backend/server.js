@@ -1,7 +1,7 @@
 // server.js – Node.js backend using pg (node-postgres)
 
 'use strict';
-require('dotenv').config({ path: require('path').resolve(__dirname, '..', '.env') });
+require('dotenv').config();
 
 const http   = require('http');
 const url    = require('url');
@@ -401,4 +401,5 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () =>
 
   console.log(`Backend running on port ${PORT}`));
+
 
