@@ -1,6 +1,7 @@
 // server.js – Node.js backend using pg (node-postgres)
 
 'use strict';
+require('dotenv').config({ path: require('path').resolve(__dirname, '..', '.env') });
 
 const http   = require('http');
 const url    = require('url');
@@ -12,10 +13,19 @@ const { Pool } = require('pg');
 // ------------------------------------------------------------
 // ENV
 // ------------------------------------------------------------
-const PORT           = process.env.PORT;
+const PORT           = process.env.PORT || 3000;
 const DATABASE_URL   = process.env.DATABASE_URL;
-const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN;
+const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN || '*';
 const JWT_SECRET     = process.env.JWT_SECRET;
+if (!DATABASE_URL) {
+  console.error('DATABASE_URL is not set');
+  process.exit(1);
+}
+
+if (!JWT_SECRET) {
+  console.error('JWT_SECRET is not set');
+  process.exit(1);
+}
 
 // ------------------------------------------------------------
 // Static file serving
@@ -391,3 +401,4 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () =>
 
   console.log(`Backend running on port ${PORT}`));
+
