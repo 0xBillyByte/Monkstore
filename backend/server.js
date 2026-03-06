@@ -12,10 +12,10 @@ const { Pool } = require('pg');
 // ------------------------------------------------------------
 // ENV
 // ------------------------------------------------------------
-const PORT           = process.env.PORT || 3000;
+const PORT           = process.env.PORT;
 const DATABASE_URL   = process.env.DATABASE_URL;
-const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN || '*';
-const JWT_SECRET     = process.env.JWT_SECRET || 'defaultsecret';
+const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN;
+const JWT_SECRET     = process.env.JWT_SECRET;
 
 // ------------------------------------------------------------
 // Static file serving
@@ -389,4 +389,5 @@ const server = http.createServer(async (req, res) => {
 
 // ------------------------------------------------------------
 server.listen(PORT, () =>
+
   console.log(`Backend running on port ${PORT}`));
