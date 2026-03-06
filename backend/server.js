@@ -177,10 +177,10 @@ function maskDbUrl(raw) {
 // ------------------------------------------------------------
 // ENV
 // ------------------------------------------------------------
-const PORT           = process.env.PORT || 3000;
-const DATABASE_URL   = process.env.DATABASE_URL || process.env.database_url;
-const ALLOWED_ORIGIN = process.env.FRONTEND_ORIGIN || '*';
-const JWT_SECRET     = process.env.JWT_SECRET || 'defaultsecret';
+const PORT           = 3000;
+const DATABASE_URL   = 'postgres://postgres:NYadmin!@10.10.1.10:5432/monkeymint';
+const ALLOWED_ORIGIN = '*';
+const JWT_SECRET     = 'changeme_use_a_long_random_string_in_production';
 
 if (!DATABASE_URL) {
   serverLog('warn', 'startup', 'DATABASE_URL environment variable is not set.',
@@ -708,3 +708,4 @@ process.on('unhandledRejection', (reason) => {
 server.listen(PORT, () =>
 
   serverLog('info', 'startup', `Backend running on port ${PORT}.`, `DATABASE_URL: ${maskDbUrl(DATABASE_URL)}`));
+
