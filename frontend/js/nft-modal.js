@@ -180,7 +180,7 @@ class NFTModal {
     btn.textContent = 'Adding...';
     
     try {
-      const response = await fetch('/api/cart', {
+      const response = await fetch('http://10.10.3.10:3000/api/cart', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nftId: this.currentNFT.id })
@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Helper function to fetch NFT by ID
 async function fetchNFTById(id) {
   try {
-    const response = await fetch(`/api/monkeys/${id}`);
+    const response = await fetch(`http://10.10.3.10:3000/api/monkeys/${id}`);
     if (!response.ok) throw new Error('NFT not found');
     const nft = await response.json();
     

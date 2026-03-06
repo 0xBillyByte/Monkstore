@@ -172,7 +172,7 @@ async function handleIncreaseQuantity(e) {
   try {
     // Add the same item again (this will increment quantity on backend)
     const token = localStorage.getItem('authToken');
-    const response = await fetch('/api/cart', {
+    const response = await fetch('http://10.10.3.10:3000/api/cart', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
