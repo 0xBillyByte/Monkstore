@@ -53,7 +53,7 @@ async function updateCartBadge() {
 }
 
 async function initNFTDetail(nftId) {
-  const res = await fetch(`/api/monkeys/${nftId}`);
+  const res = await fetch(`http://10.10.3.10:3000/api/monkeys/${nftId}`);
   if (!res.ok) throw new Error('NFT not found');
   return res.json();
 }

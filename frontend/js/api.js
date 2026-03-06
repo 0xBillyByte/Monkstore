@@ -1,5 +1,5 @@
 // api.js – nur noch echte Requests
-const BASE = '/api';
+const BASE = 'http://10.10.3.10:3000/api';
 
 // Get auth headers
 function getAuthHeaders() {
@@ -9,7 +9,7 @@ function getAuthHeaders() {
 
 // Export for use in other modules
 export const api = {
-  baseUrl: ''
+  baseUrl: 'http://10.10.3.10:3000'
 };
 
 export async function fetchNFTs(filters = {}) {
