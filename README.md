@@ -1,60 +1,224 @@
-# Monkstore - The Place to buy Monkey NFTs
+# Monkstore - Monkey NFT Marketplace 🐒
 
-A modern, secure marketplace for trading unique Monkey NFTs with a beautiful dark-themed UI. Built with simplicity and performance in mind, Monkstore provides a seamless experience for discovering, collecting, and trading rare digital monkey collectibles.
-
-## The Thoughts Behind It
-
-Monkstore was created to demonstrate a clean, minimalist approach to building a full-stack NFT marketplace. The project emphasizes:
-
-- **Zero-dependency backend**: Using only Node.js core modules for maximum simplicity and security
-- **Performance first**: Lightweight architecture with direct PostgreSQL queries via `psql` command
-- **Modern UX**: Sleek, dark-themed interface with smooth animations and responsive design
-- **Security by design**: JWT authentication, SQL injection prevention, and proper input validation
-
-The goal is to provide a practical example of a real-world NFT marketplace that balances simplicity with professional features, making it perfect for learning or as a foundation for more complex projects.
-
-## Tech Stack
-
-### Frontend
-- **HTML5**: Semantic markup with proper accessibility
-- **CSS3**: Custom styling with CSS variables, flexbox, and grid layouts
-- **Vanilla JavaScript**: Modular ES6+ JavaScript for client-side logic
-- **Nginx**: High-performance web server for static file serving
-
-### Backend
-- **Node.js 20**: Runtime environment using only core modules (http, url, child_process, crypto)
-- **No npm dependencies**: Zero external dependencies for maximum simplicity
-- **PostgreSQL**: Relational database for data persistence
-- **JWT Authentication**: Custom JWT implementation using Node.js crypto module
-
-### DevOps
-- **Docker**: Containerized services for easy deployment
-- **Docker Compose**: Multi-container orchestration (frontend, backend, database)
-- **Alpine Linux**: Minimal base images for reduced footprint
-
-### Security Features
-- **Password Hashing**: SHA-256 hashing with secret salt
-- **JWT Tokens**: Custom JWT implementation with HMAC-SHA256 signatures
-- **SQL Injection Prevention**: Parameterized queries with proper escaping
-- **CORS Configuration**: Configurable cross-origin resource sharing
-- **Input Validation**: Request validation and sanitization
-
-## Security Notes
-
-- Never commit the `.env` file or expose sensitive credentials
-- Use strong, unique values for `JWT_SECRET` in production
-- Ensure PostgreSQL is not exposed to public internet
-- Use HTTPS in production environments
-- Regularly update dependencies and base Docker images
-
-## 🤝 Contributing
-
-This project is a demonstration/learning project. Feel free to fork and modify for your own purposes.
-
-## 📄 License
-
-This project is open source and available for educational purposes.
+A lightweight NFT marketplace for trading unique Monkey NFTs. Monkstore focuses on simplicity, performance, and a clean architecture while demonstrating a practical full‑stack setup.
 
 ---
 
-**Built with ❤️ and 🐒 by the Monkstore team**
+# Overview
+
+Monkstore is a minimal full‑stack web application that demonstrates how to build an NFT marketplace with a small and understandable technology stack.
+
+Key ideas:
+
+* Minimal backend using Node.js
+* Fast frontend served by Nginx
+* JWT authentication
+* Clean architecture with PostgreSQL
+
+The project is intended as a learning example and a base for further development.
+
+---
+
+# Tech Stack
+
+## Frontend
+
+* HTML5
+* CSS3
+* Vanilla JavaScript (ES6)
+* Nginx for static file serving
+
+## Backend
+
+* Node.js 20
+* Simple HTTP server
+* PostgreSQL
+* JWT authentication
+
+## Infrastructure
+
+* Nginx — web server and reverse proxy
+* PM2 — Node.js process manager
+* PostgreSQL — database
+
+---
+
+# Architecture
+
+```
+Browser
+   │
+   ▼
+Nginx (Port 80)
+   │
+   ├── Static files → /frontend
+   │
+   └── /api → Node.js backend (PM2)
+                │
+                ▼
+            PostgreSQL
+```
+
+Nginx serves the frontend and forwards `/api` requests to the Node backend.
+
+---
+
+# Deployment Guide (Nginx + PM2)
+
+## 1. Install requirements
+
+Example for Ubuntu / Debian:
+
+```bash
+sudo apt update
+sudo apt install nginx postgresql nodejs npm
+```
+
+Install PM2:
+
+```bash
+sudo npm install -g pm2
+```
+
+---
+
+## 2. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/monkstore.git
+cd monkstore
+```
+
+---
+
+## 3. Backend setup
+
+```bash
+cd backend
+npm install
+```
+
+Create environment file:
+
+```
+backend/.env
+```
+
+Example:
+
+```
+PORT=3000
+DATABASE_URL=postgresql://user:password@localhost:5432/monkstore
+JWT_SECRET=your-secret-key
+FRONTEND_ORIGIN=*
+```
+
+---
+
+## 4. Start backend with PM2
+
+```bash
+pm2 start server.js --name monkstore
+pm2 save
+pm2 startup
+```
+
+Check status:
+
+```bash
+pm2 status
+```
+
+Logs:
+
+```bash
+pm2 logs monkstore
+```
+
+---
+
+## 5. Configure Nginx
+
+Create a site configuration:
+
+```
+/etc/nginx/sites-available/monkstore
+```
+
+Example:
+
+```nginx
+server {
+    listen 80;
+    server_name _;
+
+    root /var/www/monkstore/frontend;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:3000/api/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location /health {
+        proxy_pass http://127.0.0.1:3000/health;
+    }
+}
+```
+
+Enable the site:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/monkstore /etc/nginx/sites-enabled/
+```
+
+Test configuration:
+
+```bash
+sudo nginx -t
+```
+
+Reload Nginx:
+
+```bash
+sudo systemctl reload nginx
+```
+
+---
+
+## 6. Access the application
+
+Open the server in your browser:
+
+```
+http://your-server-ip
+```
+
+API requests are automatically forwarded to the Node backend.
+
+---
+
+# Security Notes
+
+* Never commit `.env`
+* Use a strong `JWT_SECRET`
+* Do not expose PostgreSQL publicly
+* Use HTTPS in production
+
+---
+
+# Contributing
+
+This project is intended for learning and experimentation. Feel free to fork and extend it.
+
+---
+
+# License
+
+Open source — for educational and learning purposes.
