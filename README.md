@@ -2,7 +2,7 @@
 
 A lightweight NFT marketplace for trading unique Monkey NFTs. Monkstore focuses on simplicity, performance, and a clean architecture while demonstrating a practical full‑stack setup.
 
----
+
 
 # Overview
 
@@ -17,7 +17,7 @@ Key ideas:
 
 The project is intended as a learning example and a base for further development.
 
----
+
 
 # Tech Stack
 
@@ -41,7 +41,7 @@ The project is intended as a learning example and a base for further development
 * PM2 — Node.js process manager
 * PostgreSQL — database
 
----
+
 
 # Architecture
 
@@ -61,7 +61,7 @@ Nginx (Port 80)
 
 Nginx serves the frontend and forwards `/api` requests to the Node backend.
 
----
+
 
 # Deployment Guide (Nginx + PM2)
 
@@ -80,7 +80,7 @@ Install PM2:
 sudo npm install -g pm2
 ```
 
----
+
 
 ## 2. Clone the repository
 
@@ -89,7 +89,7 @@ git clone https://github.com/YOUR_USERNAME/monkstore.git
 cd monkstore
 ```
 
----
+
 
 ## 3. Backend setup
 
@@ -113,7 +113,7 @@ JWT_SECRET=your-secret-key
 FRONTEND_ORIGIN=*
 ```
 
----
+
 
 ## 4. Start backend with PM2
 
@@ -135,7 +135,7 @@ Logs:
 pm2 logs monkstore
 ```
 
----
+
 
 ## 5. Configure Nginx
 
@@ -190,7 +190,7 @@ Reload Nginx:
 sudo systemctl reload nginx
 ```
 
----
+
 
 ## 6. Access the application
 
@@ -202,7 +202,7 @@ http://your-server-ip
 
 API requests are automatically forwarded to the Node backend.
 
----
+
 
 # Security Notes
 
@@ -211,13 +211,13 @@ API requests are automatically forwarded to the Node backend.
 * Do not expose PostgreSQL publicly
 * Use HTTPS in production
 
----
+
 
 # Contributing
 
 This project is intended for learning and experimentation. Feel free to fork and extend it.
 
----
+
 
 # License
 
